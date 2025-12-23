@@ -1,5 +1,6 @@
 <Solution>
+  <Project Path="ArtNet/ArtNet.csproj" Id="e4421911-b218-4d6e-83da-58676c195d1e" />
   <Project Path="LightOnSpotApp/LightOnSpotApp.csproj" />
   <Project Path="LightOnSpotConsole/LightOnSpotConsole.csproj" />
-  <Project Path="LightOnSpotLibrary/LightOnSpotLibrary.csproj" />
+  <Project Path="LightOnSpotLibrary/LightOnSpotCore.csproj" />
 </Solution>

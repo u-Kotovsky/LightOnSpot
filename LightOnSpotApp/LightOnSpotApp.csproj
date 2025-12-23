@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LightOnSpotLibrary\LightOnSpotLibrary.csproj" />
+    <ProjectReference Include="..\LightOnSpotLibrary\LightOnSpotCore.csproj" />
   </ItemGroup>
 
 </Project>

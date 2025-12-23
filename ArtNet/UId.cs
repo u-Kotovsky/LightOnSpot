@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ArtNet.Rdm
+﻿namespace ArtNet.Rdm
 {
     public class UId : IComparable
     {
@@ -33,16 +31,13 @@ namespace ArtNet.Rdm
         public uint DeviceId { get; protected set; }
 
         #region Predefined Values
-
         private static UId broadcast = new UId(0xFFFF, 0xFFFFFFFF);
-
         public static UId Broadcast
         {
             get { return broadcast; }
         }
 
         private static UId empty = new UId();
-
         public static UId Empty
         {
             get { return empty; }
@@ -72,7 +67,6 @@ namespace ArtNet.Rdm
         {
             get { return maxValue; }
         }
-
         #endregion
         
         public override string ToString()
@@ -111,7 +105,7 @@ namespace ArtNet.Rdm
             string[] parts = url.Split('/');
             string idPart = parts[parts.Length - 1];
             
-            //Normalize the string
+            // Normalize the string
             idPart = idPart.Replace("0x",string.Empty).Replace(":",string.Empty);
 
             return new UId((ushort) int.Parse(idPart.Substring(0, 4), System.Globalization.NumberStyles.HexNumber), (uint) int.Parse(idPart.Substring(4, 8), System.Globalization.NumberStyles.HexNumber));
@@ -132,7 +126,6 @@ namespace ArtNet.Rdm
         }
 
         #region IComparable Members
-
         public int CompareTo(object obj)
         {
             UId? id = obj as UId;
@@ -142,7 +135,6 @@ namespace ArtNet.Rdm
 
             return -1;
         }
-
         #endregion
     }
 }

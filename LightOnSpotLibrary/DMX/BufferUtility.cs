@@ -19,22 +19,6 @@ namespace Unity_DMX
         }
 
         /// <summary>
-        /// This will ensure buffer has this length initialized.
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="length"></param>
-        public static void EnsureCapacity(ref byte[] buffer, int length) // could cause an issue with all dmx channels = 0
-        {
-            if (buffer.Length >= length) return;
-            
-            byte[] temp = new byte[length];
-            
-            Buffer.BlockCopy(buffer, 0, temp, 0, buffer.Length);
-
-            buffer = temp;
-        }
-
-        /// <summary>
         /// This will write a ArtNetDmxPacket into global buffer and then invokes a callback with changed universe.
         /// </summary>
         /// <param name="globalDmxBuffer"></param>
@@ -64,36 +48,6 @@ namespace Unity_DMX
             buffer.SetRange(0, globalDmxBuffer, srcOffset, 512);
             
             return buffer;
-        }
-
-        public static List<byte> EnsureCapacity(this List<byte> buffer, int capacity)
-        {
-            if (buffer.Count >= capacity) return buffer;
-            
-            int range = capacity - buffer.Count;
-            buffer.AddRange(new byte[range]);
-            
-            return buffer;
-        }
-
-        public static List<byte> BlockCopy(this List<byte> dstBuffer, int dstOffset, List<byte> srcBuffer, int srcOffset, int length)
-        {
-            for (int i = 0; i < length; i++)
-            {
-                dstBuffer[i + dstOffset] = srcBuffer[i + srcOffset];
-            }
-            
-            return dstBuffer;
-        }
-
-        public static List<byte> BlockCopy(this List<byte> dstBuffer, int dstOffset, byte[] srcBuffer, int srcOffset, int length)
-        {
-            for (int i = srcOffset; i < length; i++)
-            {
-                dstBuffer[i + dstOffset] = srcBuffer[i + srcOffset];
-            }
-            
-            return dstBuffer;
         }
     }
 }

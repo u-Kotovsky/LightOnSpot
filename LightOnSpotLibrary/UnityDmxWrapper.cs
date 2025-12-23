@@ -1,62 +1,43 @@
-﻿using Unity_DMX.Core;
+﻿using System.Net;
+using LightOnSpot.Core.unity.dmx.Core;
+using Unity_DMX.Core;
 
-namespace LightOnSpotLibrary
+namespace LightOnSpotCore
 {
     public class UnityDmxWrapper
     {
-        private DmxBuffer dmxBuffer;
-        private DmxController controller;
-        private DmxController outputController;
-        private Task task;
+        internal DmxBuffer dmxBuffer;
+        public DmxBuffer Buffer { get { return dmxBuffer; } }
+        internal DmxController controller;
+        public DmxController Input { get { return controller; } }
+        internal DmxController outputController;
+        public DmxController Output { get { return controller; } }
 
         public void Start()
         {
             Console.WriteLine("Starting UnityDmxWrapper..");
-            dmxBuffer = new DmxBuffer();
-            controller = new DmxController(dmxBuffer);
 
-            string outputIp = "127.0.0.1";
-            int outputPort = 6455;
-
-            Console.WriteLine($"Output is '{outputIp}:{outputPort}'");
+            // Output
+            SimpleSocketAddress outputAddress = new SimpleSocketAddress("127.0.0.1", 6455);
+            Console.WriteLine($"Output is '{outputAddress.EndPoint}'");
 
             outputController = new DmxController(new DmxBuffer());
-            outputController.SetRemote("127.0.0.1", 6455);
+            outputController.RemoteAddress = outputAddress;
             outputController.StartArtNet();
 
-            string inputIp = "127.0.0.1";
-            int inputPort = 6454;
+            // Input
+            dmxBuffer = new DmxBuffer();
+            controller = new DmxController(dmxBuffer);
+            SimpleSocketAddress inputAddress = new SimpleSocketAddress("127.0.0.1", 6454);
 
-            Console.WriteLine($"Input is '{inputIp}:{inputPort}'");
-
-            controller.SetRemote("127.0.0.1", 6454);
-            controller.SetRedirect(outputController);
+            Console.WriteLine($"Input is '{inputAddress.EndPoint}'");
+            controller.RemoteAddress = inputAddress;
+            //controller.SetRemote("127.0.0.1", 6454);
+            controller.DmxOutput = outputController;
             controller.RedirectPackets = true;
             controller.StartArtNet();
 
             Console.WriteLine("UnityDmxWrapper is now running.");
-
-            task = new Task(Update);
-            task.Start();
-        }
-
-        private void Update()
-        {
-            dmxBuffer.Buffer.EnsureCapacity(512);
-            do
-            {
-                byte[] bytes = new byte[512];
-
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    bytes[i] = (byte)Random.Shared.Next(255);
-                }
-
-                dmxBuffer.Buffer.SetRange(0, bytes);
-                controller.ForceBufferUpdate();
-
-                Thread.Sleep(200);
-            } while (true);
         }
     }
 }
