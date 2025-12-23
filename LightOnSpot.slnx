@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LightOnSpotApp/LightOnSpotApp.csproj" />
+  <Project Path="LightOnSpotConsole/LightOnSpotConsole.csproj" />
+  <Project Path="LightOnSpotLibrary/LightOnSpotLibrary.csproj" />
+</Solution>
