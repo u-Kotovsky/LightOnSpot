@@ -51,7 +51,7 @@ namespace LightOnSpotConsole
                 {
                     var d = drones[i];
 
-                    var timeOffset = (time + i * 3) / 1000;
+                    var timeOffset = (time + i * Math.PI*2) / 1000;
 
                     var timeSin = Math.Sin(timeOffset);
                     var timeCos = Math.Cos(timeOffset);
