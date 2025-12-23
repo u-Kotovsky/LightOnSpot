@@ -1,0 +1,1 @@
+Program by default accepts ArtNet in 6454 and outputs ArtNet into 6455 port.
