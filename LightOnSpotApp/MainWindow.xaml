@@ -5,49 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LightOnSpotApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="LightOnSpot" Height="450" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"></Button>
-                    <Button Grid.Column="1"></Button>
-                    <Button Grid.Column="2"></Button>
-                    <Button Grid.Column="3"></Button>
-                    <Button Grid.Column="4"></Button>
-                    <Button Grid.Column="5"></Button>
-                </Grid>
-                <Grid Grid.Row="1">
-                    
-                </Grid>
-            </Grid>
-            <Grid Grid.Row="1">
-                <DataGrid></DataGrid>
-            </Grid>
-            <Grid Grid.Row="2">
-                <DataGrid></DataGrid>
-            </Grid>
-        </Grid>
+        <Label>Starting</Label>
     </Grid>
 </Window>

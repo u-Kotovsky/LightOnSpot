@@ -3,42 +3,42 @@ using System.Drawing;
 using System.Numerics;
 using LightOnSpotCore;
 
-namespace LightOnSpotConsole
+namespace LightOnSpotApp.ViewModels
 {
-    internal class Program
+    public class ConsoleViewModel
     {
         private static UnityDmxWrapper dmxWrapper;
         private static Task task;
 
         private static LightingDrone[] drones = new LightingDrone[1000];
 
-        static void Main(string[] args)
+        public ConsoleViewModel()
         {
             for (int i = 0; i < drones.Length; i++)
             {
                 drones[i] = new LightingDrone();
             }
 
-            Console.WriteLine("Running ArtNet");
-
             dmxWrapper = new UnityDmxWrapper();
             dmxWrapper.Start();
-
-            Console.WriteLine("After start");
 
             // data test
             task = new Task(Update);
             task.Start();
-
-            Console.ReadLine();
         }
 
-        private static void Update()
+        private double deltaTime = 0;
+        public double DeltaTime { get { return deltaTime; } }
+
+        public int DroneCount { get { return drones.Length; } }
+
+        public int BufferCapacity { get { return dmxWrapper.DmxBuffer.Buffer.Count; } }
+
+        private void Update()
         {
             var capacity = 512 * 23;
             dmxWrapper.DmxBuffer.Buffer.EnsureCapacity(capacity);
 
-            double deltaTime = 1;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
