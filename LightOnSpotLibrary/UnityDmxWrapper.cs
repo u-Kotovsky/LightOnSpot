@@ -1,15 +1,16 @@
-﻿using System.Net;
-using LightOnSpot.Core.unity.dmx.Core;
+﻿using LightOnSpot.Core.unity.dmx.Core;
 using Unity_DMX.Core;
 
 namespace LightOnSpotCore
 {
     public class UnityDmxWrapper
     {
-        internal DmxBuffer dmxBuffer;
-        public DmxBuffer Buffer { get { return dmxBuffer; } }
+        internal DmxBuffer dmxBuffer; // Shared DMX512 buffer
+        public DmxBuffer DmxBuffer { get { return dmxBuffer; } }
+
         internal DmxController controller;
         public DmxController Input { get { return controller; } }
+
         internal DmxController outputController;
         public DmxController Output { get { return controller; } }
 
@@ -26,13 +27,12 @@ namespace LightOnSpotCore
             outputController.StartArtNet();
 
             // Input
+            SimpleSocketAddress inputAddress = new SimpleSocketAddress("127.0.0.1", 6454);
+            Console.WriteLine($"Input is '{inputAddress.EndPoint}'");
+
             dmxBuffer = new DmxBuffer();
             controller = new DmxController(dmxBuffer);
-            SimpleSocketAddress inputAddress = new SimpleSocketAddress("127.0.0.1", 6454);
-
-            Console.WriteLine($"Input is '{inputAddress.EndPoint}'");
             controller.RemoteAddress = inputAddress;
-            //controller.SetRemote("127.0.0.1", 6454);
             controller.DmxOutput = outputController;
             controller.RedirectPackets = true;
             controller.StartArtNet();

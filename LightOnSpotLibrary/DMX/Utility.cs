@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LightOnSpotConsole
+namespace LightOnSpotCore
 {
     public static class Utility
     {
@@ -101,6 +101,19 @@ namespace LightOnSpotConsole
             return (byte)fine;
         }
 
+        public static byte GetUltra(float input) // input = 0 .. 1
+        {
+            // 1) scale to 24bit
+            uint value = (uint)(input * ushort.MaxValue);
+            
+            ulong extendedValue = (ulong)(input * 0xFFFFFF);
+
+            // 2) get lowest byte
+            ulong ultra = extendedValue & 0xFF;
+            // return byte
+            return (byte)ultra;
+        }
+
         /// <summary>
         /// Calculates value from coarse, fine with value remap
         /// </summary>
@@ -125,6 +138,18 @@ namespace LightOnSpotConsole
         {
             uint combinedValue = ((uint)coarse << 8) | fine;
             return combinedValue / (float)ushort.MaxValue;
+        }
+
+        public static float GetValueFromCoarseFineUltra(byte coarse, byte fine, byte ultra, float minValue, float maxValue)
+        {
+            float normalized = GetNormalizedValueFromCoarseFine(coarse, fine, ultra);
+            return float.Lerp(minValue, maxValue, normalized);
+        }
+
+        public static float GetNormalizedValueFromCoarseFine(byte coarse, byte fine, byte ultra)
+        {
+            uint combinedValue = ((uint)coarse << 16) | ((uint)fine << 8) | ultra;
+            return combinedValue / (float)0xFFFFFF;
         }
     }
 }
