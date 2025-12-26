@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using LightOnSpotApp.ViewModels;
 
 namespace LightOnSpotApp
 {
@@ -7,14 +8,21 @@ namespace LightOnSpotApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel viewModel;
         public MainWindow()
         {
             InitializeComponent();
 
-            Hide();
-            var console = new ConsoleWindow(new ViewModels.ConsoleViewModel());
-            console.Show();
-            Close();
+            viewModel = new MainWindowViewModel(MainFrame);
+            DataContext = viewModel;
+        }
+
+        private void MainFrame_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
+        {
+            if (e.NavigationMode == System.Windows.Navigation.NavigationMode.Back)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
