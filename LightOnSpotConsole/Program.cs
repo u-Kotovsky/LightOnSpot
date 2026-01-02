@@ -70,9 +70,17 @@ namespace LightOnSpotConsole
             for (int i = 0; i < drones.Length; i++)
             {
                 var d = drones[i];
+                var j = i % 500;
 
-                //Circle(ref d, i, speed, 12, 16, 1, new Vector3(0, 0, 30));
-                Thing1(ref d, i, speed);
+                if (i < 500)
+                {
+                    Circle(ref d, j, speed, 256, 2, 1, new Vector3(0, 0, 15));
+                }
+
+                if (i >= 500)
+                {
+                    Thing1(ref d, i, speed);
+                }
 
                 var data = d.GetBytes();
                 var dmxOffset = baseOffset + (i * data.Length);
@@ -82,24 +90,27 @@ namespace LightOnSpotConsole
         }
 
         private static void Circle(ref LightingDrone d, int i, 
-            float speed, int count, float r = 16, float heightOffset = 1,
+            float speed, int count, float r, float heightOffset,
             Vector3 offset = new Vector3())
         {
-            var j = i % count;
+            var circleIndex = (i % count) + 1;
+            var timeWithSpeed = Time.deltaTime * speed * 16;
+            var (timeSin, timeCos) = Math.SinCos(timeWithSpeed + i);
+            var timeSin2 = Math.Sin(timeWithSpeed + i);
+            var absSin = (timeSin2 + 1) / 2;
 
-            var timeOffset = Time.deltaTime * speed + (i);// * Math.PI * 2;
-
-            var (timeSin, timeCos) = ShortMath.SinCos(timeOffset);
-
-            var local = new Vector3((float)timeSin * r * 2, (float)timeCos * r * 2, j * heightOffset);
-
+            #region Position
+            var local = new Vector3((float)timeSin * r, (float)timeCos * r, circleIndex * heightOffset);
             var mixed = local + offset;
-
             d.SetPosition(mixed);
+            #endregion
 
-            //var offsetCos1 = (byte)(255 - (byte)(Math.Sin((timeSin)) * 255));
-            //d.SetColor(offsetCos1, offsetCos1, offsetCos1);
-            d.SetColor(Color.Red);
+            #region Color
+            var col1 = Color.Aqua;
+            var col2 = Color.Black;
+            var colOut = Lerp(col2, col1, Math.Abs((float)timeSin2));
+            d.SetColor(colOut);
+            #endregion
         }
 
         private static void Thing1(ref LightingDrone d, int i, float speed)
@@ -112,7 +123,7 @@ namespace LightOnSpotConsole
 
             var timeWithSpeed = Time.deltaTime * speed;
 
-            var (timeSin, timeCos) = ((float, float))ShortMath.SinCos(timeWithSpeed + i);
+            var (timeSin, timeCos) = ((float, float))Math.SinCos(timeWithSpeed + i);
 
             var timeSin2 = (float)Math.Sin(timeWithSpeed * circleIndex2 * 8 + i * 4);
             var timeSin3 = (float)Math.Sin(timeWithSpeed);
