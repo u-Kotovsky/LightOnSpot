@@ -59,7 +59,7 @@ namespace LightOnSpotConsole
         {
             var baseOffset = 2880;
 
-            var speed = .1f;
+            var speed = .05f;
             var speed2 = .5f;
 
             dmxWrapper.DmxBuffer.Buffer.EnsureCapacity(baseOffset + (drones.Length * 9));
@@ -104,29 +104,27 @@ namespace LightOnSpotConsole
 
         private static void Thing1(ref LightingDrone d, int i, float speed)
         {
-            var radius = 4f;
-            var max = 500;
+            var radius = 3f;
+            var max = 32;
             var j = i % max;
-            var circleIndex = (i % 3);
+            var circleIndex = i % 5;
             var circleIndex2 = circleIndex + 1;
 
-            var timeOffset = Time.deltaTime * speed + i;
-            var (timeSin, timeCos) = ((float, float))ShortMath.SinCos(timeOffset);
+            var timeWithSpeed = Time.deltaTime * speed;
 
-            var timeOffset2 = Time.deltaTime * speed * circleIndex2 * 8 + i * 4;
-            var (timeSin2, timeCos2) = ((float, float))ShortMath.SinCos(timeOffset2);
+            var (timeSin, timeCos) = ((float, float))ShortMath.SinCos(timeWithSpeed + i);
 
-            var timeOffset3 = Time.deltaTime * speed * 1;
-            var (timeSin3, timeCos3) = ((float, float))ShortMath.SinCos(timeOffset3);
+            var timeSin2 = (float)Math.Sin(timeWithSpeed * circleIndex2 * 8 + i * 4);
+            var timeSin3 = (float)Math.Sin(timeWithSpeed);
 
-            radius *= (float)(1.25 * (Math.Abs(timeSin3) + 1f));
+            radius *= (float)(1.15 * (Math.Abs(timeSin3) + 1));
 
             var tsp = (float)(timeSin + 1) / 2;
             var tsp2 = (float)(timeSin2 + 1) / 2;
 
             #region Position
             var center = new Vector3(0, 0, circleIndex * 8);
-            var height = (j / 128 * timeSin2) + 32;
+            var height = (timeSin2 * circleIndex2) + 32;
             var pos = new Vector3(timeSin * radius * circleIndex2, timeCos * radius * circleIndex2, height);
 
             var mixed = pos + center;
@@ -145,7 +143,7 @@ namespace LightOnSpotConsole
 
             var col1 = Color.Aqua;
             var col2 = Color.Black;
-            var colOut = Lerp(col2, col1, Math.Abs(timeSin2));
+            var colOut = Lerp(col2, col1, Math.Abs(timeSin2 * 0.25f));
             d.SetColor(colOut);
             #endregion
         }
