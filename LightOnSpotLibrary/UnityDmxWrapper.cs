@@ -18,11 +18,13 @@ namespace LightOnSpotCore
         {
             Console.WriteLine("Starting UnityDmxWrapper..");
 
+            dmxBuffer = new DmxBuffer();
+
             // Output
             SimpleSocketAddress outputAddress = new SimpleSocketAddress("127.0.0.1", 6455);
             Console.WriteLine($"Output is '{outputAddress.EndPoint}'");
 
-            outputController = new DmxController(new DmxBuffer());
+            outputController = new DmxController(dmxBuffer);
             outputController.RemoteAddress = outputAddress;
             outputController.StartArtNet();
 
@@ -30,8 +32,8 @@ namespace LightOnSpotCore
             SimpleSocketAddress inputAddress = new SimpleSocketAddress("127.0.0.1", 6454);
             Console.WriteLine($"Input is '{inputAddress.EndPoint}'");
 
-            dmxBuffer = new DmxBuffer();
             controller = new DmxController(dmxBuffer);
+            controller.isServer = true;
             controller.RemoteAddress = inputAddress;
             controller.DmxOutput = outputController;
             controller.RedirectPackets = true;

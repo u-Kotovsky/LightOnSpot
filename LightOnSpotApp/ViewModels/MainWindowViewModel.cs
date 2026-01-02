@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 using System.Windows.Controls;
 using LightOnSpotApp.Pages;
 using LightOnSpotApp.Services;
@@ -80,8 +81,8 @@ namespace LightOnSpotApp.ViewModels
         {
             var baseOffset = 2880;
 
-            var speed = .1f;
-            var speed2 = 1f;
+            var speed = .05f;
+            var speed2 = .5f;
 
             dmxWrapper.DmxBuffer.Buffer.EnsureCapacity(baseOffset + (drones.Length * 9));
 
@@ -92,16 +93,29 @@ namespace LightOnSpotApp.ViewModels
             {
                 var d = drones[i];
 
-                /*var ind = i % 2;
 
-                var timeOffset = deltaTime * speed + (i * Math.PI/70);// * Math.PI * 2;
+                var timeOffset = Time.deltaTime * speed + (i);// * Math.PI * 2;
+
+                var timeSin = (float)Math.Sin(timeOffset);
+                var timeCos = (float)Math.Cos(timeOffset);
+
+                var radius = i % 255;
+
+                var height = i % 256;
+
+                d.SetPosition(timeSin, timeCos, height);
+
+
+                /*var ind = i % 500;
+
+                var timeOffset = Time.deltaTime * speed + (i);// * Math.PI * 2;
 
                 var timeSin = Math.Sin(timeOffset);
                 var timeCos = Math.Cos(timeOffset);
 
-                var radius = i % 3 + 1 * 16;
+                var radius = i % 3 + 1 * 4;
 
-                var tower = (i % 16) - 1;
+                var tower = (i % 32) - 1;
 
                 switch (tower)
                 {
@@ -116,18 +130,19 @@ namespace LightOnSpotApp.ViewModels
                         break;
                 }
 
-                var center = new Vector3(0, 0, 2 + (tower * 5));
+                var center = new Vector3(0, 0, 2 + (tower * 2));
                 var height = ind * 0.05f * (float)timeCos + (float)timeSin;
-                var pos = new Vector3((float)timeSin * radius, (float)timeCos * radius, 30 + height);
+                var pos = new Vector3((float)timeSin * radius, (float)timeCos * radius, 5 + height);
 
                 var mixed = pos + center;
 
                 d.SetPosition(mixed);
 
-                var offsetCos1 = (byte)(255 - (byte)(Math.Sin((timeSin)) * 255));
-                d.SetColor(offsetCos1, offsetCos1, offsetCos1);*/
+                //var offsetCos1 = (byte)(255 - (byte)(Math.Sin((timeSin)) * 255));
+                // d.SetColor(offsetCos1, offsetCos1, offsetCos1);
+                d.SetColor(Color.Red);*/
 
-                var index = i % 4;
+                /*var index = i % 4;
 
                 var timeOffset = Time.deltaTime * speed + (i * Math.PI / 70);// * Math.PI * 2;
                 var timeSin = Math.Sin(timeOffset);
@@ -143,29 +158,31 @@ namespace LightOnSpotApp.ViewModels
                 var timeReciprocalEstimate = Math.ReciprocalEstimate(timeOffset);
 
                 var mult = 16;
+                var mult2 = .15f;
 
                 var num = (float)timeSin * mult;
-                var num2 = 2 + (i % 256);
+                var num2 = 2 + (i % 256) * mult2;
+                var num3 = 2 + (i % 256) * (float)timeCos * mult2;
 
                 switch (index)
                 {
                     case 0:
-                        d.SetPosition(num, 0, num2);
+                        d.SetPosition(num, num3, num2);
                         d.SetColor(Color.Red);
                         break;
                     case 1:
-                        d.SetPosition(-num, 0, num2);
+                        d.SetPosition(-num, num3, num2);
                         d.SetColor(Color.Green);
                         break;
                     case 2:
-                        d.SetPosition(0, num, num2);
+                        d.SetPosition(num3, num, num2);
                         d.SetColor(Color.Yellow);
                         break;
                     case 3:
-                        d.SetPosition(0, -num, num2);
-                        d.SetColor(Color.White);
+                        d.SetPosition(num3, -num, num2);
+                        d.SetColor(Color.Aqua);
                         break;
-                }
+                }*/
 
                 var data = d.GetBytes();
                 var dmxOffset = baseOffset + (i * data.Length);

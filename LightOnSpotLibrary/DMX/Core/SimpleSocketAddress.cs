@@ -28,6 +28,7 @@ namespace LightOnSpot.Core.unity.dmx.Core
             get
             {
                 if (host == null) NetworkUtility.FindFromHostName(_address);
+                if (host == null) host = IPAddress.Loopback;
                 return host;
             }
         }

@@ -81,7 +81,7 @@ namespace Unity_DMX.Core
 
         public void InitializeSocket()
         {
-            Console.WriteLine($"'{Prefix}' '{remoteAddress.Port}' is {IsServerOrClient}");
+            Console.WriteLine($"'{Prefix}' '{remoteAddress.Host}' '{remoteAddress.Address}' '{remoteAddress.Port}' is {IsServerOrClient}");
             socket = new ArtNetSocket(remoteAddress.Port);
             socket.NewPacket += OnNewPacketReceived;
 
@@ -221,8 +221,9 @@ namespace Unity_DMX.Core
             {
                 return;
             }
-            
+
             // Server only?
+            dmxBuffer.Buffer.EnsureCapacity((packet.Universe + 1) * 512);
             BufferUtility.WriteDmxToGlobalBuffer(ref dmxBuffer.Buffer, ref packet, (universe, data) =>
             {
                 OnDmxDataChanged?.Invoke(universe, data, dmxBuffer.Buffer);
