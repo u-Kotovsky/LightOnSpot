@@ -1,14 +1,14 @@
 ﻿using System.Net;
+using ArtNet.Enums;
 using ArtNet.Packets;
 using ArtNet.Sockets;
-using ArtNet.Enums;
 using LightOnSpot.Core.unity.dmx.Core;
+using Microsoft.Extensions.Logging;
 
 namespace Unity_DMX.Core
 {
     public class DmxController
     {
-        internal const string Prefix = "DmxControlller";
         internal DmxBuffer? dmxBuffer;
 
         #region Properties
@@ -52,9 +52,23 @@ namespace Unity_DMX.Core
 
         internal ArtNetSocket? socket;
         internal ArtNetDmxPacket? dmxToSend;
+
+        private ILoggerFactory factory;
+        private ILogger logger;
         
         public DmxController(DmxBuffer? dmxBuffer = null)
         {
+            factory = LoggerFactory.Create(builder =>
+            {
+                builder.AddSimpleConsole(options =>
+                {
+                    options.IncludeScopes = true;
+                    options.SingleLine = true;
+                    options.TimestampFormat = "HH:mm:ss ";
+                });
+            });
+            logger = factory.CreateLogger(nameof(DmxController));
+
             dmxToSend ??= new ArtNetDmxPacket();
             dmxToSend.DmxData ??= new byte[512];
             dmxDataMap = [];
@@ -81,7 +95,7 @@ namespace Unity_DMX.Core
 
         public void InitializeSocket()
         {
-            Console.WriteLine($"'{Prefix}' '{remoteAddress.Host}' '{remoteAddress.Address}' '{remoteAddress.Port}' is {IsServerOrClient}");
+            logger.LogInformation($"Initialize '{remoteAddress.Host}' '{remoteAddress.Address}:{remoteAddress.Port}' is {IsServerOrClient}");
             socket = new ArtNetSocket(remoteAddress.Port);
             socket.NewPacket += OnNewPacketReceived;
 
@@ -108,7 +122,7 @@ namespace Unity_DMX.Core
         /// </summary>
         public void StartArtNet()
         {
-            Console.WriteLine($"'{Prefix}' '{remoteAddress.Port}' ({IsServerOrClient}) was requested to be started.");
+            //logger.LogInformation($"'{remoteAddress.Port}' ({IsServerOrClient}) was requested to be started.");
             if (IsArtNetOn)
             {
                 return;
@@ -122,7 +136,7 @@ namespace Unity_DMX.Core
         /// </summary>
         public void StopArtNet()
         {
-            Console.WriteLine($"'{Prefix}' '{remoteAddress.Port}' ({IsServerOrClient}) was requested to be stopped.");
+            //logger.LogInformation($"'{remoteAddress.Port}' ({IsServerOrClient}) was requested to be stopped.");
 
             if (!IsArtNetOn || socket == null || dmxBuffer == null)
             {
@@ -140,6 +154,7 @@ namespace Unity_DMX.Core
         #region Buffer or DMX512 data
         private Dictionary<int, byte[]> dmxDataMap; // TODO: I know this thing is weird, I will look into new solution later..
         public event Action<short, DmxData, DmxData> OnDmxDataChanged = delegate { };
+        public event Action<short, DmxData> OnDmxPacketReceived = delegate { };
 
         public void ForceBufferUpdate()
         {
@@ -182,7 +197,7 @@ namespace Unity_DMX.Core
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NullReferenceException"></exception>
-        private void OnNewPacketReceived(object sender, NewPacketEventArgs<ArtNetPacket> e)
+        private void OnNewPacketReceived(object? sender, NewPacketEventArgs<ArtNetPacket> e)
         {
             if (e.Packet.OpCode != ArtNetOpCodes.Dmx) return; // We look only for DMX
             
@@ -191,7 +206,9 @@ namespace Unity_DMX.Core
             {
                 return;
             }
-            if (dmxDataMap.ContainsKey(packet.Universe) && dmxDataMap[packet.Universe] == packet.DmxData)
+
+            if (dmxDataMap.ContainsKey(packet.Universe) && 
+                dmxDataMap[packet.Universe] == packet.DmxData)
             {
                 return;
             }
@@ -226,6 +243,7 @@ namespace Unity_DMX.Core
             dmxBuffer.Buffer.EnsureCapacity((packet.Universe + 1) * 512);
             BufferUtility.WriteDmxToGlobalBuffer(ref dmxBuffer.Buffer, ref packet, (universe, data) =>
             {
+                OnDmxPacketReceived?.Invoke(universe, data);
                 OnDmxDataChanged?.Invoke(universe, data, dmxBuffer.Buffer);
                 SendDmxData(universe);
             });

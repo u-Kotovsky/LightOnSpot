@@ -2,17 +2,17 @@
 using System.Numerics;
 using Unity_DMX.Core;
 
-namespace LightOnSpotCore
+namespace LightOnSpotCore.DMX.Fixtures
 {
     public class LightingDrone
     {
-        private static Vector3 Max = new Vector3(800, 800, 800);
-        private static Vector3 Min = new Vector3(-800, -800, -800);
+        private static Vector3 Max = new(800, 800, 800);
+        private static Vector3 Min = new(-800, -800, -800);
 
-        private DmxVector3 position = new DmxVector3(Min, Max);
+        private DmxVector3 position = new(Min, Max);
         public DmxVector3 Position { get { return position; } set { position = value; } }
 
-        private DmxColor color = new DmxColor(255, 255, 255);
+        private DmxColor color = new(255, 255, 255);
         public DmxColor Color { get { return color; } set { color = value; } }
 
         public byte[] GetBytes()
