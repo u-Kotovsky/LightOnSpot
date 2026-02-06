@@ -1,51 +1,52 @@
 ﻿using System.Collections;
 using System.Net.Sockets;
-using System.Threading.Channels;
 using CoreOSC;
 using CoreOSC.IO;
-using LightOnSpotCore.OSC;
-using NAudio.Midi;
 
 namespace LightOnSpotCore.MIDI
 {
-    public class MidiExperiment //: IDisposable
+    public class MidiExperiment
     {
-        private BitArray _noteLinked = new(64);
-        private BitArray _noteState = new(64);
+        private static MidiExperiment? instance;
+        public static MidiExperiment Instance { get { return instance; } }
 
-        public static float[] Blending = new float[8];
+        private BitArray _noteLinked = new(64);
+        public BitArray NoteLink { get { return _noteLinked; } }
+
+        private BitArray _noteState = new(64);
+        public BitArray NoteState { get { return _noteState; } }
+
+        private float[] blending = new float[8];
+        public float[] Blending { get { return blending; } set { blending = value; } }
 
         private MidiInWrapper midiIn;
         private MidiOutWrapper midiOut;
 
         public MidiExperiment()
         {
+            instance = this;
             // Initialize things
             //midiIn = new MidiInWrapper("MIDIIN2 (APC mini mk2)");
             //midiOut = new MidiOutWrapper("MIDIOUT2 (APC mini mk2)");
             midiIn = new MidiInWrapper("APC mini mk2");
             midiOut = new MidiOutWrapper("APC mini mk2");
             //timeCodeIn = new MidiInWrapper();
-            //timeCodeOut = new MidiOutWrapper();
-            //timeCodeGenerator = new MidiTimeCodeGenerator(timeCodeOut);
+            timeCodeOut = new MidiOutWrapper("MidiLoop");
+            timeCodeGenerator = new MidiTimeCodeGenerator(timeCodeOut);
             //oscSender = new OscSender("127.0.0.1", 7000); // Resolume Input
 
             Start();
         }
 
         //private static MidiInWrapper timeCodeIn;
-        //private static MidiOutWrapper timeCodeOut;
-        //private static MidiTimeCodeGenerator timeCodeGenerator;
+        private static MidiOutWrapper? timeCodeOut;
+        private static MidiTimeCodeGenerator? timeCodeGenerator;
 
         private void ResetFeedback()
         {
             for (byte i = 0; i < _noteLinked.Length; i++)
             {
-                if (!_noteLinked[i])
-                {
-                    midiOut.SendNoteOn(0, 1, i, 90, 0);
-                }
-                else
+                if (_noteLinked[i])
                 {
                     _noteState[i] = !_noteState[i];
                     SetNoteState(midiOut, i, _noteState[i]);
@@ -88,7 +89,7 @@ namespace LightOnSpotCore.MIDI
             //timeCodeIn.SelectDevice("MidiLoop");
             //timeCodeOut.SelectDevice("MidiLoop");
 
-            /*timeCodeGenerator.OnSmpteOffsetEvent += (@event) =>
+            timeCodeGenerator.OnSmpteOffsetEvent += (@event) =>
             {
                 string text = Extensions.GetReadableTime(@event);
 
@@ -102,14 +103,15 @@ namespace LightOnSpotCore.MIDI
 
                 //Console.Title = text;
                 //oscSender.Send("/composition/layers/1/clips/11/video/source/textgenerator/text/params/lines", text);
-            };*/
+            };
 
             // Apply post-methods
             midiIn.NoteOff += (noteEvent) =>
             {
                 if (_noteLinked.Length < noteEvent.NoteNumber) return;
-                _noteState[noteEvent.NoteNumber] = !_noteState[noteEvent.NoteNumber];
+                if (!_noteLinked[noteEvent.NoteNumber]) return;
                 SetNoteState(midiOut, noteEvent.NoteNumber, _noteState[noteEvent.NoteNumber]);
+                _noteState[noteEvent.NoteNumber] = !_noteState[noteEvent.NoteNumber];
             };
 
             midiIn.NoteOff += (noteEvent) =>
@@ -122,7 +124,7 @@ namespace LightOnSpotCore.MIDI
 
             midiIn.ControlChange += (controlChangeEvent) =>
             {
-                int index = (int)controlChangeEvent.Controller - 48; // APC offset, first slider
+                int index = (int)controlChangeEvent.Controller - 48; // APCmini offset, first slider
 
                 var mapped2 = Extensions.Map(controlChangeEvent.ControllerValue, 0f, 127f, 0f, 1f);
                 Blending[index] = mapped2;
@@ -147,29 +149,16 @@ namespace LightOnSpotCore.MIDI
                 }*/
             };
 
-            // Run things
-            //midiIn.Start();
-            //midiOut.Start();
-            //timeCodeIn.Start();
-            //timeCodeOut.Start();
-
             ResetFeedback();
 
             //timeCodeThread = new Thread(new ThreadStart(timeCodeGenerator.Start));
             //timeCodeThread.Start();
         }
 
-
-
         public void Stop()
         {
             midiIn.Stop();
             midiOut.Stop();
         }
-
-        /*public void Dispose()
-        {
-            Stop();
-        }*/
     }
 }

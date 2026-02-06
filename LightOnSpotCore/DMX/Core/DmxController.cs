@@ -3,6 +3,7 @@ using ArtNet.Enums;
 using ArtNet.Packets;
 using ArtNet.Sockets;
 using LightOnSpot.Core.unity.dmx.Core;
+using LightOnSpotCore.DMX.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace Unity_DMX.Core

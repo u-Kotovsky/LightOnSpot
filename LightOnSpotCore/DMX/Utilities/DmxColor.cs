@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace LightOnSpotCore
+namespace LightOnSpotCore.DMX.Utilities
 {
     public class DmxColor
     {
@@ -17,30 +17,40 @@ namespace LightOnSpotCore
 
         public DmxColor(byte r, byte g, byte b)
         {
-            this.r.Coarse = r;
-            this.g.Coarse = g;
-            this.b.Coarse = b;
+            this.r.DefaultValue = r;
+            this.g.DefaultValue = g;
+            this.b.DefaultValue = b;
+
+            //this.r.
+
+            this.r.Reset();
+            this.g.Reset();
+            this.b.Reset();
         }
 
         public DmxColor(Color color)
         {
-            r.Coarse = color.R;
-            g.Coarse = color.G;
-            b.Coarse = color.B;
+            r.Value = color.R;
+            g.Value = color.G;
+            b.Value = color.B;
+
+            r.Reset();
+            g.Reset();
+            b.Reset();
         }
 
         public void Set(byte r, byte g, byte b)
         {
-            this.r.Coarse = r;
-            this.g.Coarse = g;
-            this.b.Coarse = b;
+            this.r.Value = r;
+            this.g.Value = g;
+            this.b.Value = b;
         }
 
         public void Set(Color color)
         {
-            this.r.Coarse = color.R;
-            this.g.Coarse = color.G;
-            this.b.Coarse = color.B;
+            this.r.Value = color.R;
+            this.g.Value = color.G;
+            this.b.Value = color.B;
         }
 
         public byte[] GetBytes()

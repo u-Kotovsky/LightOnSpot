@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using LightOnSpotCore.DMX.Utilities;
 using Unity_DMX.Core;
 
 namespace LightOnSpotCore.DMX.Fixtures
@@ -15,6 +16,11 @@ namespace LightOnSpotCore.DMX.Fixtures
         private DmxColor color = new(255, 255, 255);
         public DmxColor Color { get { return color; } set { color = value; } }
 
+        public LightingDrone()
+        {
+            position.SetQuality(true);
+        }
+
         public byte[] GetBytes()
         {
             byte[] positionBytes = position.GetBytes();
@@ -29,15 +35,6 @@ namespace LightOnSpotCore.DMX.Fixtures
 
         public void SetPosition(float x, float y, float z)
         {
-            //if (x > Max.X) throw new Exception($"x > Max.X ({x} > {Max.X})");
-            //if (x < Min.X) throw new Exception($"x < Min.X ({x} < {Min.X})");
-
-            //if (y > Max.Y) throw new Exception($"x > Max.X ({y} > {Max.Y})");
-            //if (y < Min.Y) throw new Exception($"x < Min.X ({y} < {Min.Y})");
-
-            //if (z > Max.Z) throw new Exception($"x > Max.X ({z} > {Max.Z})");
-            //if (z < Min.Z) throw new Exception($"x < Min.X ({z} < {Min.Z})");
-
             position.Set(x, y, z);
         }
 

@@ -1,29 +1,27 @@
 ﻿using System.Numerics;
 
-namespace LightOnSpotCore
+namespace LightOnSpotCore.DMX.Utilities
 {
     public class DmxVector3
     {
-        private Vector3 Max = new Vector3(800, 800, 800);
-        private Vector3 Min = new Vector3(-800, -800, -800);
+        private Vector3 Max = new(800, 800, 800);
+        private Vector3 Min = new(-800, -800, -800);
 
-        private DMXChannel x;
+        private DMXChannel x = new();
         public DMXChannel XChannel { get { return z; } set { z = value; } }
         public float X
         {
             get
             {
-                return //Utility.MapRange(x, 0, 1, Min.X, Max.X); // 0 .. 1 to -800 .. 800
-                float.Lerp(Min.X, Max.X, x.Value);
+                return float.Lerp(Min.X, Max.X, x.Value);
             }
             set
             {
-                x.Value = //Utility.MapRange(x, Min.X, Max.X, 0, 1); // -800 .. 800 to 0 .. 1
-                Utility.InverseLerp(Min.X, Max.X, value);
+                x.Value = Utility.InverseLerp(Min.X, Max.X, value);
             }
         }
 
-        private DMXChannel y;
+        private DMXChannel y = new();
         public DMXChannel YChannel { get { return z; } set { z = value; } }
         public float Y
         {
@@ -37,7 +35,7 @@ namespace LightOnSpotCore
             }
         }
 
-        private DMXChannel z;
+        private DMXChannel z = new();
         public DMXChannel ZChannel { get { return z; } set { z = value; } }
         public float Z
         {
@@ -58,14 +56,23 @@ namespace LightOnSpotCore
             Max = max;
         }
 
+        public void SetQuality(bool useFine = false, bool useUtlra = false)
+        {
+            x.SetFine(fine => fine.Use = useFine);
+            x.SetUltra(ultra => ultra.Use = useUtlra);
+
+            y.SetFine(fine => fine.Use = useFine);
+            y.SetUltra(ultra => ultra.Use = useUtlra);
+
+            z.SetFine(fine => fine.Use = useFine);
+            z.SetUltra(ultra => ultra.Use = useUtlra);
+        }
+
         public void Set(float x, float y, float z)
         {
             X = x;
             Y = y;
             Z = z;
-            //this.x.Value = x;
-            //this.y.Value = y;
-            //this.z.Value = z;
         }
 
         public void Set(Vector3 vector3)
@@ -83,9 +90,9 @@ namespace LightOnSpotCore
         public byte[] GetBytes()
         {
             return [
-                this.x.Coarse, this.x.Fine,
-                this.y.Coarse, this.y.Fine,
-                this.z.Coarse, this.z.Fine];
+                x.Coarse, x.Fine,
+                y.Coarse, y.Fine,
+                z.Coarse, z.Fine];
         }
     }
 }

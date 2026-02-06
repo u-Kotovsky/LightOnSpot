@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LightOnSpotCore
+namespace LightOnSpotCore.DMX.Utilities
 {
     public static class Utility
     {
@@ -38,11 +38,11 @@ namespace LightOnSpotCore
         public static byte GetCoarse(float input, float minValue, float maxValue)
         {
             // 1) normalize
-            double normalized = InverseLerp(minValue, maxValue, input);
+            float normalized = InverseLerp(minValue, maxValue, input);
             // 2) scale
             uint value = (uint)(normalized * ushort.MaxValue);
             // 3) get upper byte
-            double coarse = value >> 8;
+            float coarse = value >> 8;
             // 4) return byte value
             return (byte)coarse;
         }
@@ -57,11 +57,11 @@ namespace LightOnSpotCore
         public static byte GetFine(float input, float minValue, float maxValue)
         {
             // 1) normalize
-            double normalized = InverseLerp(minValue, maxValue, input);
+            float normalized = InverseLerp(minValue, maxValue, input);
             // 2) scale
             uint value = (uint)(normalized * ushort.MaxValue);
             // 3) get upper byte
-            double fine = value & 0xFF;
+            float fine = value & 0xFF;
             // 4) return byte value
             return (byte)fine;
         }
@@ -81,7 +81,7 @@ namespace LightOnSpotCore
             // 1) scale
             uint value = (uint)(input * ushort.MaxValue);
             // 2) get upper byte
-            double coarse = value >> 8;
+            float coarse = value >> 8;
             // 3) return byte value
             return (byte)coarse;
         }
@@ -96,7 +96,7 @@ namespace LightOnSpotCore
             // 1) scale
             uint value = (uint)(input * ushort.MaxValue);
             // 2) get upper byte
-            double fine = value & 0xFF;
+            float fine = value & 0xFF;
             // 3) return byte value
             return (byte)fine;
         }

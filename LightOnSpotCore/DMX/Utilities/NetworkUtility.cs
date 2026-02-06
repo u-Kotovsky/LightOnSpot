@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace Unity_DMX
+namespace LightOnSpotCore.DMX.Utilities
 {
     public abstract class NetworkUtility
     {

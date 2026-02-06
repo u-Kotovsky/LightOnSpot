@@ -8,14 +8,13 @@ namespace LightOnSpotConsole
     internal class Program
     {
         private static UnityDmxWrapper dmxWrapper = new UnityDmxWrapper();
-        private static MidiExperiment midiExperiment;
+        private static MidiExperiment? midiExperiment;
 
-        private static Thread droneThread;
+        private static Thread? droneThread;
 
         private static void Main(string[] args)
         {
             midiExperiment = new MidiExperiment();
-            //midiExperiment.Start();
 
             DroneExample.Start();
 
@@ -26,6 +25,7 @@ namespace LightOnSpotConsole
 
             // data test
             droneThread = new Thread(Update);
+            droneThread.IsBackground = true;
             droneThread.Start();
 
             Console.ReadLine();

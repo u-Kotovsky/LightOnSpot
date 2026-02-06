@@ -1,7 +1,7 @@
 using ArtNet.Packets;
 using Unity_DMX.Core;
 
-namespace Unity_DMX
+namespace LightOnSpotCore.DMX.Utilities
 {
     public static class BufferUtility
     {

@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Unity_DMX;
+using LightOnSpotCore.DMX.Utilities;
 
 namespace LightOnSpot.Core.unity.dmx.Core
 {

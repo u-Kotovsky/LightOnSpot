@@ -6,6 +6,7 @@ using LightOnSpotApp.Pages;
 using LightOnSpotApp.Services;
 using LightOnSpotCore;
 using LightOnSpotCore.DMX.Fixtures;
+using LightOnSpotCore.DMX.Utilities;
 
 namespace LightOnSpotApp.ViewModels
 {
