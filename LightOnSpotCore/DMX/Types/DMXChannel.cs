@@ -1,4 +1,6 @@
-﻿namespace LightOnSpotCore.DMX.Utilities
+﻿using LightOnSpotCore.DMX.Utilities;
+
+namespace LightOnSpotCore.DMX.Types
 {
     public class DMXChannel
     {

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace LightOnSpotCore.DMX.Utilities
+namespace LightOnSpotCore.DMX.Types
 {
     public class DmxColor
     {

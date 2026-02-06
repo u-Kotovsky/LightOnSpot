@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
+using LightOnSpotCore.DMX.Utilities;
 
-namespace LightOnSpotCore.DMX.Utilities
+namespace LightOnSpotCore.DMX.Types
 {
     public class DmxVector3
     {

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
-using LightOnSpotCore.DMX.Utilities;
+using LightOnSpotCore.DMX.Types;
 using Unity_DMX.Core;
 
 namespace LightOnSpotCore.DMX.Fixtures

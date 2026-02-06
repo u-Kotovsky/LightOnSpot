@@ -1,4 +1,4 @@
-﻿namespace LightOnSpotCore.DMX.Utilities
+﻿namespace LightOnSpotCore.DMX.Types
 {
     public class SubChannel
     {

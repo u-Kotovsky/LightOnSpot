@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 using LightOnSpotCore.DMX.Fixtures;
-using LightOnSpotCore.DMX.Utilities;
+using LightOnSpotCore.DMX.Types;
 using LightOnSpotCore.MIDI;
 using Unity_DMX.Core;
 
