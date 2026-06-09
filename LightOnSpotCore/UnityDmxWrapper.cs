@@ -13,7 +13,7 @@ namespace LightOnSpotCore
         public DmxController Input { get { return controller; } }
 
         internal DmxController outputController;
-        public DmxController Output { get { return controller; } }
+        public DmxController Output { get { return outputController; } }
 
         private ILoggerFactory factory;
         private ILogger logger;
@@ -44,6 +44,7 @@ namespace LightOnSpotCore
 
             outputController = new(dmxBuffer);
             outputController.RemoteAddress = outputAddress;
+            //outputController.redirectPackets = true;
             outputController.StartArtNet();
 
             // Input
